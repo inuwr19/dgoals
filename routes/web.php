@@ -35,3 +35,7 @@ Route::controller(App\Http\Controllers\frontendController::class)->group(functio
     //     Route::post('logout', 'logout')->name('logout');
     // });
 });
+
+Auth::routes();
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
