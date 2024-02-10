@@ -16,13 +16,13 @@ class CategorySeeder extends Seeder
     public function run()
     {
         $data = [
-            "Sepatu Bola",
             "Sepatu Futsal",
+            "Sepatu Bola",
         ];
 
         foreach ($data as $item) {
             Category::create([
-                'name'      => Str::ucfirst($item),
+                'name' => Str::ucfirst($item),
             ]);
         }
     }
