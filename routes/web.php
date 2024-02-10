@@ -17,14 +17,15 @@ use Illuminate\Support\Facades\Route;
 Route::controller(App\Http\Controllers\frontendController::class)->group(function() {
     Route::get('/', 'index')->name('index');
     Route::get('/shop', 'shop')->name('shop');
-    Route::get('/shopDetail', 'shopDetail')->name('shopDetail');
+    Route::get('/shopDetail/{id}', 'shopDetail')->name('shopDetail');
     Route::get('/about', 'about')->name('about');
     Route::get('/contact', 'contact')->name('contact');
     Route::get('auth/google', 'redirectToGoogle')->name('auth.google');
     Route::get('auth/google/callback', 'handleGoogleCallback');
     Route::middleware(['auth'])->group(function () {
         Route::get('/cart', 'cart')->name('cart');
-        Route::post('/addCart', 'addCart')->name('addCart');
+        Route::post('/post_cart', 'post_cart')->name('post_cart');
+        Route::post('/post_checkout', 'post_checkout')->name('post_checkout');
         Route::post('/checkout', 'checkout')->name('checkout');
         Route::get('/midtrans/{id}', 'midtrans')->name('midtrans');
         Route::post('/payment', 'payment')->name('payment');

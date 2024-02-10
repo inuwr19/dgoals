@@ -12,7 +12,6 @@
     </div>
     <!-- Single Page Header End -->
 
-
     <!-- Single Product Start -->
     <div class="container-fluid py-5 mt-5">
         <div class="container py-5">
@@ -21,15 +20,13 @@
                     <div class="row g-4">
                         <div class="col-lg-6">
                             <div class="border rounded">
-                                <a href="#">
-                                    <img src="{{ asset('customer') }}/img/product/1.jpg" class="img-fluid rounded" alt="Image">
-                                </a>
+                                    <img src="{{ url('storage/product/'.$item->thumbnail) }}" class="img-fluid rounded" alt="Image">
                             </div>
                         </div>
                         <div class="col-lg-6">
-                            <h4 class="fw-bold mb-3">Ortus Hyperglade 2.0</h4>
+                            <h4 class="fw-bold mb-3">{{ $item->name }}</h4>
                             <p class="mb-3">Category: Futsal Shoes</p>
-                            <h5 class="fw-bold mb-3">Rp.200.000</h5>
+                            <h5 class="fw-bold mb-3">{{"Rp." .number_format($item->price, 2, ",", ".") }}</h5>
                             <div class="d-flex mb-4">
                                 <i class="fa fa-star text-secondary"></i>
                                 <i class="fa fa-star text-secondary"></i>
@@ -50,7 +47,15 @@
                                     </button>
                                 </div>
                             </div>
-                            <a href="{{ route('cart') }}" class="btn border border-secondary rounded-pill px-4 py-2 mb-4 text-primary"><i class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart</a>
+                            <form action="{{ route('post_cart') }}" method="POST">
+                                @csrf
+                                <input type="hidden" name="product_id" value="{{ $item->id }}">
+                                <input type="hidden" name="qty" id="product-quanity" value="1">
+                                <input type="hidden" name="total_price" value="{{ $item->price }}">
+
+                            <button class="btn border border-secondary rounded-pill px-4 py-2 mb-4 text-primary" type="submit">
+                                <i class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart
+                            </button>
                         </div>
                         <div class="col-lg-12">
                             <nav>
@@ -62,43 +67,7 @@
                             </nav>
                             <div class="tab-content mb-5">
                                 <div class="tab-pane active" id="nav-about" role="tabpanel" aria-labelledby="nav-about-tab">
-                                    <p>Sepatu ini
-                                        hadir dengan teknologi yang membuatnya sangat nyaman saat dikenakan karena
-                                        material upper yang tipis, bobot yang ringan, dan memberikan kesan sejuk.
-                                        Teknologi Quick Fit, Ortflow, Cumulus Foam, dan Ortsoax masih menjadi teknologi
-                                        juara yang mendukung sepatu ini. Memiliki material Sandwich, PU Nosew,
-                                        Compression Phylon, dan Rubber menajdikan sepatu ini teman setia dalam setiap
-                                        langkahmu.</p>
-                                    <div class="px-2">
-                                        <div class="row g-4">
-                                            <div class="col-6">
-                                                <div class="row bg-light align-items-center text-center justify-content-center py-2">
-                                                    <div class="col-6">
-                                                        <p class="mb-0">Weight</p>
-                                                    </div>
-                                                    <div class="col-6">
-                                                        <p class="mb-0">250 g</p>
-                                                    </div>
-                                                </div>
-                                                <div class="row text-center align-items-center justify-content-center py-2">
-                                                    <div class="col-6">
-                                                        <p class="mb-0">Brand</p>
-                                                    </div>
-                                                    <div class="col-6">
-                                                        <p class="mb-0">Ortus</p>
-                                                    </div>
-                                                </div>
-                                                <div class="row bg-light text-center align-items-center justify-content-center py-2">
-                                                    <div class="col-6">
-                                                        <p class="mb-0">Quality</p>
-                                                    </div>
-                                                    <div class="col-6">
-                                                        <p class="mb-0">Original</p>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
+                                    <p>{{ $item->desc }}</p>
                                 </div>
                             </div>
                         </div>
