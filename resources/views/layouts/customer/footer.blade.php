@@ -45,8 +45,8 @@
                 <div class="footer-item">
                     <h4 class="text-light mb-3">Contact</h4>
                     <p>Address: Jl. Peta Selatan No.17, RT.10/RW.1, Kalideres, Kec. Kalideres, Kota Jakarta Barat, Daerah Khusus Ibukota Jakarta 11840, Jakarta, Indonesia</p>
-                    <p>Email: dgoals@gmail.com</p>
-                    <p>Phone: +62 813 4567 8910</p>
+                    <p>Email: arjunajuna182@gmail.com </p>
+                    <p>Phone: +62 819 5864 5711</p>
                     <p>Payment Accepted</p>
                     <img src="{{ asset('customer') }}/img/payment.png" class="img-fluid" alt="">
                 </div>

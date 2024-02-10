@@ -59,26 +59,7 @@ class frontendController extends Controller
             $data->qty = $data->qty + $qty;
         }
         $data->save();
-        return redirect()->back();
-    }
-
-    public function post_checkout(Request $request)
-    {
-        $data['total']  = 0;
-        $data['cart'] = Cart::with('product')->where('user_id', auth()->user()->id)->get();
-        foreach ($data['cart'] as $item) {
-            $orderProduct               = new OrderProduct();
-            $orderProduct->order_id     = $item->id;
-            $orderProduct->product_id   = $item->product_id;
-            $orderProduct->sub_price    = $item->qty * $item->product->price;
-            $orderProduct->qty          = $item->qty;
-            $orderProduct->save();
-
-            $cart_id                    = Cart::where('id', $item->id)->first();
-            $cart_id->delete();
-        }
-
-        return redirect()->route('reviewrating', $atr->id);
+        return view('customer.cart');
     }
 
     public function checkout() {

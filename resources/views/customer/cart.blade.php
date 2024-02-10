@@ -32,8 +32,8 @@
                         </tr>
                     </thead>
                     <tbody>
+                        @forelse ($cart as $item)
                         <tr>
-                            @forelse ($cart as $item)
                             <th scope="row">
                                 <div class="d-flex align-items-center">
                                     <img src="{{ url('storage/product/'.$item->product->thumbnail) }}"
@@ -70,8 +70,8 @@
                                     <i class="fa fa-times text-danger"></i>
                                 </button>
                             </td>
-                            @endforeach
                         </tr>
+                        @endforeach
                     </tbody>
                 </table>
             </div>
