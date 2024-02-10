@@ -59,7 +59,7 @@ class frontendController extends Controller
             $data->qty = $data->qty + $qty;
         }
         $data->save();
-        return view('customer.cart');
+        return redirect()->back();
     }
 
     public function checkout() {
