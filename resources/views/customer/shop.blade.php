@@ -12,7 +12,7 @@
     <!-- Single Page Header End -->
 
 
-    <!-- Fruits Shop Start-->
+    <!-- Shop Start-->
     <div class="container-fluid fruite py-5">
         <div class="container py-5">
             <h1 class="mb-4">Sport Shoes Shop</h1>
@@ -55,5 +55,5 @@
             </div>
         </div>
     </div>
-    <!-- Fruits Shop End-->
+    <!-- Shop End-->
 @endsection

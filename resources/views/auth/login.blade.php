@@ -1,73 +1,92 @@
-@extends('layouts.app')
+@extends('layouts.customer.index')
 
 @section('content')
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">{{ __('Login') }}</div>
+<section class="vh-100">
+    <div class="container py-5 h-100">
+        <div class="row d-flex justify-content-center align-items-center h-100" style="margin-top: 115px;">
+            <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+                <div class="card shadow-2-strong" style="border-radius: 1rem;">
+                    <div class="card-body p-5 text-center">
 
-                <div class="card-body">
-                    <form method="POST" action="{{ route('login') }}">
-                        @csrf
-
-                        <div class="row mb-3">
-                            <label for="email" class="col-md-4 col-form-label text-md-end">{{ __('Email Address') }}</label>
-
-                            <div class="col-md-6">
-                                <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus>
-
-                                @error('email')
+                        <h3 class="mb-5">Sign in</h3>
+                        <form method="POST" action="{{ route('login') }}">
+                            @csrf
+                        <div class="form-outline mb-4">
+                            <input id="email" type="email" class="form-control form-control-lg @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus/>
+                            <label class="form-label" for="typeEmailX-2">Email</label>
+                            @error('email')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
                                     </span>
                                 @enderror
-                            </div>
                         </div>
 
-                        <div class="row mb-3">
-                            <label for="password" class="col-md-4 col-form-label text-md-end">{{ __('Password') }}</label>
-
-                            <div class="col-md-6">
-                                <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="current-password">
-
-                                @error('password')
+                        <div class="form-outline mb-4">
+                            <input id="password" type="password" class="form-control form-control-lg @error('password') is-invalid @enderror" name="password" required autocomplete="current-password" />
+                            <label class="form-label" for="typePasswordX-2">Password</label>
+                            @error('password')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
                                     </span>
                                 @enderror
-                            </div>
                         </div>
 
-                        <div class="row mb-3">
-                            <div class="col-md-6 offset-md-4">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}>
-
-                                    <label class="form-check-label" for="remember">
-                                        {{ __('Remember Me') }}
-                                    </label>
-                                </div>
-                            </div>
+                        <!-- Checkbox -->
+                        <div class="form-check d-flex justify-content-start mb-4">
+                            <input class="form-check-input" type="checkbox" value="" id="form1Example3" />
+                            <label class="form-check-label" for="form1Example3"> Remember password </label>
                         </div>
 
-                        <div class="row mb-0">
-                            <div class="col-md-8 offset-md-4">
-                                <button type="submit" class="btn btn-primary">
-                                    {{ __('Login') }}
-                                </button>
+                        <button class="btn btn-success" type="submit">Login</button>
 
-                                @if (Route::has('password.request'))
-                                    <a class="btn btn-link" href="{{ route('password.request') }}">
-                                        {{ __('Forgot Your Password?') }}
-                                    </a>
-                                @endif
-                            </div>
+                        <div class="mt-3">
+                            <p class="mb-0">Don't have an account?
+                                <a href="{{ route('register') }}" class="fw-bold">Sign Up</a>
+                            </p>
                         </div>
-                    </form>
+
+                        <hr class="my-4">
+
+                        <button type="button" class="google-sign-in-button" >
+                            Sign in with Google
+                        </button>
+
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
+</section>
+{{-- <div class="container mt-5">
+    <div class="row mt-5 pt-5">
+        <div class="col-md-6 offset-md-3">
+            <div class="card my-5 mt-5">
+
+                <form class="card-body cardbody-color p-lg-5">
+
+                    <div class="text-center">
+                        <img src="https://cdn.pixabay.com/photo/2016/03/31/19/56/avatar-1295397__340.png"
+                            class="img-fluid profile-image-pic img-thumbnail rounded-circle my-3" width="200px"
+                            alt="profile">
+                    </div>
+
+                    <div class="mb-3">
+                        <input type="text" class="form-control" id="Username" aria-describedby="emailHelp"
+                            placeholder="User Name">
+                    </div>
+                    <div class="mb-3">
+                        <input type="password" class="form-control" id="password" placeholder="password">
+                    </div>
+                    <div class="text-center"><button type="submit" class="btn btn-color px-5 mb-5 w-100">Login</button>
+                    </div>
+                    <div id="emailHelp" class="form-text text-center mb-5 text-dark">Not
+                        Registered? <a href="#" class="text-dark fw-bold"> Create an
+                            Account</a>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div> --}}
 @endsection
