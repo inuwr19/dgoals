@@ -20,9 +20,9 @@ class CreateProductsTable extends Migration
             $table->bigInteger('price');
             $table->string('thumbnail')->nullable();
             $table->string('desc');
-            $table->string('weight');
-            $table->string('brand');
-            $table->string('quality');
+            // $table->string('weight');
+            // $table->string('brand');
+            // $table->string('quality');
             $table->timestamps();
         });
     }
