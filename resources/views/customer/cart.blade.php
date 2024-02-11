@@ -33,45 +33,67 @@
                     </thead>
                     <tbody>
                         @forelse ($cart as $item)
-                        <tr>
-                            <th scope="row">
-                                <div class="d-flex align-items-center">
-                                    <img src="{{ url('storage/product/'.$item->product->thumbnail) }}"
-                                        class="img-fluid me-5 rounded-circle" style="width: 80px; height: 80px;" alt="">
-                                </div>
-                            </th>
-                            <td>
-                                <p class="mb-0 mt-4">{{ $item->product->name }}</p>
-                            </td>
-                            <td>
-                                <p class="mb-0 mt-4">{{ "Rp." .number_format($item->product->price, 2, ",", ".") }}</p>
-                            </td>
-                            <td>
-                                <div class="input-group quantity mt-4" style="width: 100px;">
-                                    <div class="input-group-btn">
-                                        <button class="btn btn-sm btn-minus rounded-circle bg-light border">
-                                            <i class="fa fa-minus"></i>
-                                        </button>
+                            <tr>
+                                <th scope="row">
+                                    <div class="d-flex align-items-center">
+                                        <img src="{{ url('storage/product/'.$item->product->thumbnail) }}" class="img-fluid me-5 rounded-circle" style="width: 80px; height: 80px;" alt="">
                                     </div>
-                                    <input type="text" class="form-control form-control-sm text-center border-0"
-                                        value="1">
-                                    <div class="input-group-btn">
-                                        <button class="btn btn-sm btn-plus rounded-circle bg-light border">
-                                            <i class="fa fa-plus"></i>
-                                        </button>
+                                </th>
+                                <td>
+                                    <p class="mb-0 mt-4">{{ $item->product->name }}</p>
+                                </td>
+                                <td>
+                                    <p class="mb-0 mt-4">{{ "Rp." .number_format($item->product->price, 2, ",", ".") }}</p>
+                                </td>
+                                <td>
+                                    <div class="input-group quantity mt-4" style="width: 100px;">
+                                        <div class="input-group-btn">
+                                            <a href="{{ route('minus_cart') }}" class="btn btn-sm btn-minus rounded-circle bg-light border" onclick="event.preventDefault(); document.getElementById('minus_cart_form-{{ $item->id }}').submit();">
+                                                <i class="fa fa-minus"></i>
+                                            </a>
+                                        </div>
+                                        <form id="minus_cart_form-{{ $item->id }}" class="d-none" action="{{ route('minus_cart') }}" method="POST">
+                                            @csrf
+
+                                            <input type="hidden" name="id" value="{{ $item->id }}">
+                                            <input type="hidden" name="product_id" value="{{ $item->product->id }}">
+                                            <input type="hidden" name="qty" value="{{ $item->qty }}">
+                                        </form>
+                                        <input type="text" class="form-control form-control-sm text-center border-0" value="{{ $item->qty }}">
+                                        <div class="input-group-btn">
+                                            <a href="{{ route('plus_cart') }}" class="btn btn-sm btn-plus rounded-circle bg-light border" onclick="event.preventDefault(); document.getElementById('plus_cart_form-{{ $item->id }}').submit();">
+                                                <i class="fa fa-plus"></i>
+                                            </a>
+                                        </div>
+                                        <form id="plus_cart_form-{{ $item->id }}" class="d-none" action="{{ route('plus_cart') }}" method="POST">
+                                            @csrf
+
+                                            <input type="hidden" name="id" value="{{ $item->id }}">
+                                            <input type="hidden" name="product_id" value="{{ $item->product->id }}">
+                                            <input type="hidden" name="qty" value="{{ $item->qty }}">
+                                        </form>
                                     </div>
-                                </div>
-                            </td>
-                            <td>
-                                <p class="mb-0 mt-4">{{ "Rp." .number_format($item->product->price, 2, ",", ".") }}</p>
-                            </td>
-                            <td>
-                                <button class="btn btn-md rounded-circle bg-light border mt-4">
-                                    <i class="fa fa-times text-danger"></i>
-                                </button>
-                            </td>
-                        </tr>
-                        @endforeach
+                                </td>
+                                <td>
+                                    <p class="mb-0 mt-4">{{ "Rp." .number_format($item->product->price*$item->qty, 2, ",", ".") }}</p>
+                                </td>
+                                <td>
+                                    <a href="{{ route('delete_cart') }}" class="btn btn-md rounded-circle bg-light border mt-4" onclick="event.preventDefault(); document.getElementById('del_cart_form-{{ $item->id }}').submit();">
+                                        <i class="fa fa-times text-danger"></i>
+                                    </a>
+                                    <form id="del_cart_form-{{ $item->id }}" class="d-none" action="{{ route('delete_cart') }}" method="POST">
+                                        @method('DELETE')
+                                        @csrf
+
+                                        <input type="hidden" name="id" value="{{ $item->id }}">
+                                    </form>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="6" class="text-center fw-bold">Data Tidak Ditemukan!</td>
+                            </tr>
+                        @endforelse
                     </tbody>
                 </table>
             </div>
@@ -94,12 +116,10 @@
                             <p class="mb-0 pe-4">{{ "Rp." .number_format($total+5000, 2, ",", ".") }}</p>
                         </div>
                         <div class="text-center">
-                            <a href="{{ route('checkout') }}">
-                                <button
-                                    class="btn border-secondary rounded-pill px-4 py-3 text-primary text-uppercase mb-4 ms-4"
-                                    type="button">Proceed Checkout</button>
+                            <button class="btn border-secondary rounded-pill px-4 py-3 text-primary text-uppercase mb-4 ms-4" type="button" onclick="window.location='{{ route('checkout') }}'" @if ($total == 0) disabled @endif >
+                                Proceed Checkout
+                            </button>
                         </div>
-                        </a>
                     </div>
                 </div>
             </div>

@@ -14,55 +14,92 @@ class frontendController extends Controller
     public function index() {
         return view('customer.index');
     }
+
     public function about() {
         return view('customer.about');
     }
+
+    public function contact() {
+        return view('customer.contact');
+    }
+
     public function shop() {
         $data['product'] = Product::all();
         return view('customer.shop',$data);
     }
+
     public function shopDetail($id) {
         $data['item'] = Product::find($id);
         return view('customer.shopDetail',$data);
     }
-    public function contact() {
-        return view('customer.contact');
-    }
+
     public function cart() {
         $data['total']  = 0;
         $data['cart']   = Cart::with('product')->where('customer_id', Auth::user()->id)->orderBy('id','DESC')->get();
         foreach ($data['cart'] as $item){
             $data['total'] += $item->product->price*$item->qty;
         }
-        // dd($data);
         return view('customer.cart', $data);
     }
 
     public function post_cart(Request $request)
     {
         $data = Cart::where('customer_id', Auth::user()->id)->where('product_id', $request->product_id)->first();
-        $new = false;
+        $new  = false;
         $product = Product::find($request->product_id);
         if (!$data){
             $data = new Cart();
-            $new = true;
+            $new  = true;
         }
 
-        $qty = $request->qty == 1 ? 1 : $request->qty;
+        $qty = $request->qty <= 1 ? 1 : $request->qty;
 
         if ($new) {
-            $data->qty = $qty;
-            $data->product_id = $request->product_id;
-            $data->total_price = $product->price*$qty;
+            $data->qty         = $qty;
             $data->customer_id = Auth::user()->id;
         }else{
             $data->qty = $data->qty + $qty;
         }
+
+        $data->product_id  = $request->product_id;
+        $data->total_price = $product->price*$data->qty;
         $data->save();
         return redirect()->back();
     }
 
+    public function plus_cart(Request $request)
+    {
+        $data               = Cart::where('customer_id', Auth::user()->id)->where('id', $request->id)->first();
+        $product            = Product::find($request->product_id);
+        $data->qty          = $data->qty + 1;
+        $data->total_price  = $data->qty * $product->price;
+        $data->save();
+        return back();
+    }
+
+    public function minus_cart(Request $request)
+    {
+        $data               = Cart::where('customer_id', Auth::user()->id)->where('id', $request->id)->first();
+        $product            = Product::find($request->product_id);
+        $data->qty          = $data->qty - 1;
+        $data->total_price  = $data->qty * $product->price;
+        $data->save();
+        return back();
+    }
+
+    public function delete_cart(Request $request)
+    {
+        $data = Cart::where('customer_id', Auth::user()->id)->where('id', $request->id)->first();
+        $data->delete();
+        return back();
+    }
+
     public function checkout() {
-        return view('customer.checkout');
+        $data['total']  = 0;
+        $data['data']   = Cart::with('product')->where('customer_id', Auth::user()->id)->orderBy('id','DESC')->get();
+        foreach ($data['data'] as $item){
+            $data['total'] += $item->product->price*$item->qty;
+        }
+        return view('customer.checkout', $data);
     }
 }

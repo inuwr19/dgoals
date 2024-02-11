@@ -20,43 +20,33 @@
             <h1 class="mb-4">Billing details</h1>
             <form action="#">
                 <div class="row g-5">
-                    <div class="col-md-12 col-lg-6 col-xl-7">
-                        <div class="row">
-                            <div class="col-md-12 col-lg-6">
-                                <div class="form-item w-100">
-                                    <label class="form-label my-3">First Name<sup>*</sup></label>
-                                    <input type="text" class="form-control">
-                                </div>
-                            </div>
-                            <div class="col-md-12 col-lg-6">
-                                <div class="form-item w-100">
-                                    <label class="form-label my-3">Last Name<sup>*</sup></label>
-                                    <input type="text" class="form-control">
-                                </div>
-                            </div>
+                    <div class="col-sm-12 col-md-6">
+                        <div class="form-item">
+                            <label class="form-label my-3">Full Name<sup>*</sup></label>
+                            <input type="text" name="fullname" class="form-control" value="{{ auth()->user()->name }}" disabled>
                         </div>
                         <div class="form-item">
-                            <label class="form-label my-3">Address <sup>*</sup></label>
-                            <input type="text" class="form-control" placeholder="House Number Street Name">
-                        </div>
-                        <div class="form-item">
-                            <label class="form-label my-3">Town/City<sup>*</sup></label>
-                            <input type="text" class="form-control">
-                        </div>
-                        <div class="form-item">
-                            <label class="form-label my-3">Zip Code<sup>*</sup></label>
-                            <input type="text" class="form-control">
-                        </div>
-                        <div class="form-item">
-                            <label class="form-label my-3">Mobile<sup>*</sup></label>
-                            <input type="tel" class="form-control">
+                            <label class="form-label my-3">WhatsApp<sup>*</sup></label>
+                            <input type="number" name="whatsapp" class="form-control" value="{{ auth()->user()->phone }}" disabled>
                         </div>
                         <div class="form-item">
                             <label class="form-label my-3">Email Address<sup>*</sup></label>
-                            <input type="email" class="form-control">
+                            <input type="email" name="email" class="form-control" value="{{ auth()->user()->email }}" disabled>
+                        </div>
+                        <div class="form-item">
+                            <label class="form-label my-3">Address<sup>*</sup></label>
+                            <input type="text" name="address" class="form-control">
+                        </div>
+                        <div class="form-item">
+                            <label class="form-label my-3">Town/City<sup>*</sup></label>
+                            <input type="text" name="city" class="form-control">
+                        </div>
+                        <div class="form-item">
+                            <label class="form-label my-3">Zip Code<sup>*</sup></label>
+                            <input type="text" name="zipcode" class="form-control">
                         </div>
                     </div>
-                    <div class="col-md-12 col-lg-6 col-xl-5">
+                    <div class="col-sm-12 col-md-6">
                         <div class="table-responsive">
                             <table class="table">
                                 <thead>
@@ -69,65 +59,43 @@
                                     </tr>
                                 </thead>
                                 <tbody>
+                                    @forelse ($data as $item)
                                     <tr>
                                         <th scope="row">
                                             <div class="d-flex align-items-center mt-2">
-                                                <img src="{{ asset('customer') }}/img/product/1.jpg" class="img-fluid rounded-circle" style="width: 90px; height: 90px;" alt="">
+                                                <img src="{{ url('storage/product/'.$item->product->thumbnail) }}" class="img-fluid rounded-circle" style="width: 100px; height: 100px;" alt="">
                                             </div>
                                         </th>
-                                        <td class="py-5">Ortus Hyper V.2.0</td>
-                                        <td class="py-5">Rp.200.000</td>
-                                        <td class="py-5">1</td>
-                                        <td class="py-5">Rp.200.000</td>
+                                        <td class="py-5">{{ $item->product->name }}</td>
+                                        <td class="py-5">{{ "Rp." .number_format($item->product->price, 2, ",", ".") }}</td>
+                                        <td class="py-5">{{ $item->qty }}</td>
+                                        <td class="py-5">{{ "Rp." .number_format($item->product->price*$item->qty, 2, ",", ".") }}</td>
                                     </tr>
-                                    <tr>
-                                        <th scope="row">
-                                        </th>
-                                        <td class="py-5"></td>
-                                        <td class="py-5"></td>
-                                        <td class="py-5">
-                                            <p class="mb-0 text-dark py-3">Subtotal</p>
-                                        </td>
-                                        <td class="py-5">
-                                            <div class="py-3 border-bottom border-top">
-                                                <p class="mb-0 text-dark">Rp.200.000</p>
-                                            </div>
-                                        </td>
-
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">
-                                        </th>
-                                        <td class="py-5"></td>
-                                        <td class="py-5"></td>
-                                        <td class="py-5">
-                                            <p class="mb-0 text-dark py-3">Shipping</p>
-                                        </td>
-                                        <td class="py-5">
-                                            <div class="py-3 border-bottom border-top">
-                                                <p class="mb-0 text-dark">Rp.15.000</p>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">
-                                        </th>
-                                        <td class="py-5">
-                                            <p class="mb-0 text-dark text-uppercase py-3">TOTAL</p>
-                                        </td>
-                                        <td class="py-5"></td>
-                                        <td class="py-5"></td>
-                                        <td class="py-5">
-                                            <div class="py-3 border-bottom border-top">
-                                                <p class="mb-0 text-dark">Rp.215.000</p>
-                                            </div>
-                                        </td>
-                                    </tr>
+                                    @empty
+                                        <tr>
+                                            <td colspan="5" class="text-center fw-bold">Data Tidak Ditemukan!</td>
+                                        </tr>
+                                    @endforelse
                                 </tbody>
                             </table>
                         </div>
-                        <div class="row g-4 text-center align-items-center justify-content-center pt-4">
-                            <button type="button" class="btn border-secondary py-3 px-4 text-uppercase w-100 text-primary">Make Order</button>
+                        <div class="row">
+                            <div class="col-md-6"></div>
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <p><b>Sub Total : </b></p>
+                                        <p><b>Total : </b></p>
+                                    </div>
+                                    <div class="col-md-8 text-end">
+                                        <p><span>{{ "Rp." .number_format($total, 2, ",", ".") }}</span></p>
+                                        <p><span>{{ "Rp." .number_format($total+5000, 2, ",", ".") }}</span></p>
+                                    </div>
+                                </div>
+                                <div class="row g-4 text-center align-items-center justify-content-center pt-4">
+                                    <button type="button" class="btn border-secondary py-3 px-4 text-uppercase w-100 text-primary">Make Order</button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

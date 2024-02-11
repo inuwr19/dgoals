@@ -13,10 +13,10 @@
             </button>
             <div class="collapse navbar-collapse bg-white" id="navbarCollapse">
                 <div class="navbar-nav mx-auto">
-                    <a href="{{ route('index') }}" class="nav-item nav-link active">Home</a>
-                    <a href="{{ route('shop') }}" class="nav-item nav-link">Shop</a>
-                    <a href="{{ route('about') }}" class="nav-item nav-link">About Us</a>
-                    <a href="{{ route('contact') }}" class="nav-item nav-link">Contact Us</a>
+                    <a href="{{ route('index') }}" class="nav-item nav-link {{ (request()->is('/')) ? 'active' : '' }}">Home</a>
+                    <a href="{{ route('shop') }}" class="nav-item nav-link {{ (request()->is('shop*')) ? 'active' : '' }}">Shop</a>
+                    <a href="{{ route('about') }}" class="nav-item nav-link {{ (request()->is('about*')) ? 'active' : '' }}">About Us</a>
+                    <a href="{{ route('contact') }}" class="nav-item nav-link {{ (request()->is('constact*')) ? 'active' : '' }}">Contact Us</a>
                 </div>
                 <div class="d-flex m-3 me-0">
                     <a href="{{ route('cart') }}" class="position-relative me-4 my-auto">

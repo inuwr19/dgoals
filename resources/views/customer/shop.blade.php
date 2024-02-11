@@ -22,7 +22,7 @@
                         <div class="col-lg-12">
                             <div class="row g-4 justify-content-center">
                                 @foreach ($product as $item)
-                                <div class="col-md-6 col-lg-6 col-xl-4">
+                                <div class="col-sm-12 col-md-4">
                                     <a href="{{ route('shopDetail',$item->id) }}" class="text-decoration-none">
                                         <div class="rounded position-relative fruite-item">
                                             <div class="fruite-img">
@@ -33,8 +33,15 @@
                                                 <h4>{{ $item->name }}</h4>
                                                 <div class="d-flex justify-content-between flex-lg-wrap">
                                                     <p class="text-dark fs-5 fw-bold mb-0">{{"Rp." .number_format($item->price, 2, ",", ".") }}</p>
-                                                    <a href="#" class="btn border border-secondary rounded-pill px-3 text-primary"><i class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart</a>
+                                                    <a href="{{ route('post_cart') }}" class="btn border border-secondary rounded-pill px-3 text-primary" onclick="event.preventDefault(); document.getElementById('add_cart_form-{{ $item->id }}').submit();">
+                                                        <i class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart
+                                                    </a>
                                                 </div>
+                                                <form id="add_cart_form-{{ $item->id }}" class="d-none" action="{{ route('post_cart') }}" method="POST">
+                                                    @csrf
+
+                                                    <input type="hidden" name="product_id" value="{{ $item->id }}">
+                                                </form>
                                             </div>
                                         </div>
                                     </a>

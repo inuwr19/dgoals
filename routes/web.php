@@ -25,13 +25,15 @@ Route::controller(App\Http\Controllers\frontendController::class)->group(functio
     Route::middleware(['auth'])->group(function () {
         Route::get('/cart', 'cart')->name('cart');
         Route::post('/post_cart', 'post_cart')->name('post_cart');
+        Route::post('/plus_cart', 'plus_cart')->name('plus_cart');
+        Route::post('/minus_cart', 'minus_cart')->name('minus_cart');
+        Route::delete('/delete_cart', 'delete_cart')->name('delete_cart');
         Route::post('/post_checkout', 'post_checkout')->name('post_checkout');
-        Route::post('/checkout', 'checkout')->name('checkout');
+        Route::get('/checkout', 'checkout')->name('checkout');
         Route::get('/midtrans/{id}', 'midtrans')->name('midtrans');
         Route::post('/payment', 'payment')->name('payment');
         Route::post('/midtrans_notify', 'midtrans_notify')->name('midtrans_notify');
         Route::post('/payments_finish', 'payments_finish')->name('payments_finish');
-        Route::delete('/delete_cart', 'delete_cart')->name('delete_cart');
         Route::post('logout', 'logout')->name('logout');
     });
 });

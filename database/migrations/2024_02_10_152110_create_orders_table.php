@@ -18,6 +18,8 @@ class CreateOrdersTable extends Migration
             $table->unsignedBigInteger('customer_id');
             $table->unsignedBigInteger('product_id');
             $table->bigInteger('total');
+            $table->string('city');
+            $table->string('zipcode');
             $table->string('address');
             $table->timestamps();
         });
