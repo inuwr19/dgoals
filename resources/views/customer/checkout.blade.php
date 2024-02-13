@@ -18,7 +18,8 @@
     <div class="container-fluid py-5">
         <div class="container py-5">
             <h1 class="mb-4">Billing details</h1>
-            <form action="#">
+            <form action="{{ route('post_checkout') }}" method="POST">
+                @csrf
                 <div class="row g-5">
                     <div class="col-sm-12 col-md-6">
                         <div class="form-item">
@@ -35,15 +36,15 @@
                         </div>
                         <div class="form-item">
                             <label class="form-label my-3">Address<sup>*</sup></label>
-                            <input type="text" name="address" class="form-control">
+                            <input type="text" name="address" class="form-control" value="Jalan Gading Raya II RT.005 RW.010 No.16">
                         </div>
                         <div class="form-item">
                             <label class="form-label my-3">Town/City<sup>*</sup></label>
-                            <input type="text" name="city" class="form-control">
+                            <input type="text" name="city" class="form-control" value="Jakarta Timur">
                         </div>
                         <div class="form-item">
                             <label class="form-label my-3">Zip Code<sup>*</sup></label>
-                            <input type="text" name="zipcode" class="form-control">
+                            <input type="text" name="zipcode" class="form-control" value="13260">
                         </div>
                     </div>
                     <div class="col-sm-12 col-md-6">
@@ -93,7 +94,7 @@
                                     </div>
                                 </div>
                                 <div class="row g-4 text-center align-items-center justify-content-center pt-4">
-                                    <button type="button" class="btn border-secondary py-3 px-4 text-uppercase w-100 text-primary">Make Order</button>
+                                    <button type="submit" class="btn border-secondary py-3 px-4 text-uppercase w-100 text-primary">Make Order</button>
                                 </div>
                             </div>
                         </div>
