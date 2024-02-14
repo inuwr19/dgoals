@@ -47,9 +47,9 @@
 
                         <hr class="my-4">
 
-                        <button type="button" class="google-sign-in-button" >
+                        <a href="{{ route('redirectToGoogle') }}" class="google-sign-in-button" >
                             Sign in with Google
-                        </button>
+                        </a>
 
                     </div>
                 </div>

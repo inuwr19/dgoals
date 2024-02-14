@@ -3,17 +3,70 @@
 namespace App\Http\Controllers;
 
 use App\Models\Cart;
+use App\Models\User;
 use App\Models\Order;
 use App\Models\Product;
 use Illuminate\Support\Str;
 use App\Models\OrderProduct;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Laravel\Socialite\Facades\Socialite;
 
 class FrontendController extends Controller
 {
     public function index() {
         return view('customer.index');
+    }
+
+    public function redirectToGoogle()
+    {
+        return Socialite::driver('google')->redirect();
+    }
+
+    public function googleCallback()
+    {
+        // Google user object dari google
+        $userFromGoogle = Socialite::driver('google')->user();
+
+        // Ambil user dari database berdasarkan google user id
+        $userFromDatabase = User::where('google_id', $userFromGoogle->getId())->first();
+
+        // Jika tidak ada user, maka buat user baru
+        if (!$userFromDatabase) {
+            $newUser = new User([
+                'google_id' => $userFromGoogle->getId(),
+                'name' => $userFromGoogle->getName(),
+                'email' => $userFromGoogle->getEmail(),
+                'password' => Hash::make('password'),
+            ]);
+
+            $newUser->save();
+
+            $newUserId = User::latest()->first();
+            $newUserId->syncRoles([2]);
+
+            // Login user yang baru dibuat
+            auth('web')->login($newUser);
+            session()->regenerate();
+
+            return redirect('/');
+        }
+
+        // Jika ada user langsung login saja
+        auth('web')->login($userFromDatabase);
+        session()->regenerate();
+
+        return redirect('/');
+    }
+
+    public function logout(Request $request)
+    {
+        auth('web')->logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect('/');
     }
 
     public function about() {

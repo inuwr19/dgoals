@@ -37,4 +37,9 @@ return [
         'is3ds'         => env('MIDTRANS_IS_3DS'),
     ],
 
+    'google' => [
+        'client_id' => env('GOOGLE_CLIENT_ID'),
+        'client_secret' => env('GOOGLE_CLIENT_SECRET'),
+        'redirect' => env('GOOGLE_REDIRECT_URI'),
+    ],
 ];

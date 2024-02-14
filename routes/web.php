@@ -9,8 +9,8 @@ Route::controller(App\Http\Controllers\FrontendController::class)->group(functio
     Route::get('/shopDetail/{id}', 'shopDetail')->name('shopDetail');
     Route::get('/about', 'about')->name('about');
     Route::get('/contact', 'contact')->name('contact');
-    Route::get('auth/google', 'redirectToGoogle')->name('auth.google');
-    Route::get('auth/google/callback', 'handleGoogleCallback');
+    Route::get('login/google/redirect', 'redirectToGoogle')->middleware(['guest'])->name('redirectToGoogle');
+    Route::get('login/google/callback', 'googleCallback')->middleware(['guest'])->name('googleCallback');
     Route::middleware(['auth'])->group(function () {
         Route::get('/cart', 'cart')->name('cart');
         Route::post('/post_cart', 'post_cart')->name('post_cart');
