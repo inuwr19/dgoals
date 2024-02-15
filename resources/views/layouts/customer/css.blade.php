@@ -27,3 +27,5 @@
 
     <!-- Template Stylesheet -->
     <link href="{{ asset('customer') }}/css/style.css" rel="stylesheet">
+
+    

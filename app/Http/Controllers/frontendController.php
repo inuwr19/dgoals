@@ -6,12 +6,14 @@ use App\Models\Cart;
 use App\Models\User;
 use App\Models\Order;
 use App\Models\Product;
+use Midtrans\Config;
 use Illuminate\Support\Str;
 use App\Models\OrderProduct;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Laravel\Socialite\Facades\Socialite;
+use App\Helper\SettingHelper;
 
 class FrontendController extends Controller
 {
@@ -175,7 +177,7 @@ class FrontendController extends Controller
         $order->code_order  = 'TRX-'.mt_rand(1000,9999).time();
         $order->customer_id = Auth::user()->id;
         $order->total       = (int)$total_price;
-        $order->status      = Str::lower('paid');
+        $order->status      = Str::lower('unpaid');
         $order->city        = Str::ucfirst($request->city);
         $order->address     = Str::ucfirst($request->address);
         $order->zipcode     = (int)$request->zipcode;
@@ -188,6 +190,8 @@ class FrontendController extends Controller
             $orderProd->qty         = $item->qty;
             $orderProd->total_price = $item->total_price;
             $orderProd->save();
+
+            Cart::destroy($item->id);
         }
 
         return redirect()->route('payment',$order->id);
@@ -195,9 +199,52 @@ class FrontendController extends Controller
 
     public function payment(Request $request, $id)
     {
-        $data['order']      = Order::where('id',$id)->where('customer_id', Auth::user()->id)->first();
-        $data['orderProd']  = OrderProduct::where('order_id',$data['order']->id)->get();
-        dd($data['order'],$data['orderProd']);
+        $trx = Order::find($id);
+        $orders = OrderProduct::where('order_id',$trx->id)->get();
+        $user = $trx->user;
+        // $data['order']      = Order::where('id',$id)->where('customer_id', Auth::user()->id)->first();
+        // $data['orderProd']  = OrderProduct::where('order_id',$data['order']->id)->get();
+        // Set your Merchant Server Key
+        Config::$serverKey = SettingHelper::midtrans_api();
+        Config::$isProduction = false;
+        Config::$isSanitized = true;
+        Config::$is3ds = true;
+        // dd($trx,$orders,$user);
+
+        $trx_details = array(
+            'transaction_details' => array(
+                'order_id' => $trx->code_order,
+                'gross_amount' => round($trx->total_price),
+            )
+        );
+
+        $item_details = [];
+        foreach($orders as $order) {
+            $data = $order->product;
+            $item = array(
+                'id' => $data->id,
+                'price' => $data->price,
+                'quantity' => 1,
+                'name' => $data->name,
+            );
+            array_push($item_details, $item);
+        }
+
+        $user_details = array(
+            'first_name'    => $user->name,
+            'last_name'     => '',
+            'email'         => $user->email,
+            'phone'         => $user->phone,
+        );
+
+        $params = [
+            'transaction_details' => $trx_details,
+            'item_details' => $item_details,
+            'customer_details' => $user_details,
+        ];
+        
+        $snapToken = \Midtrans\Snap::getSnapToken($params);
+        dd($snapToken);
         return view('customer.payment', $data);
     }
 }

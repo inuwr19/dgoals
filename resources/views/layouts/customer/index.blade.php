@@ -7,6 +7,9 @@
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta content="" name="keywords">
     <meta content="" name="description">
+    <script type="text/javascript"
+		src="https://app.stg.midtrans.com/snap/snap.js"
+    data-client-key="{{ env('MIDTRANS_SERVER_KEY') }}"></script>
     @include('layouts.customer.css')
     @yield('css')
 </head>

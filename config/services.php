@@ -30,6 +30,7 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
     'midtrans' => [
+        'idMerchant'    => env('MIDTRANS_MERCHANT_ID'),
         'serverKey'     => env('MIDTRANS_SERVER_KEY'),
         'clientKey'     => env('MIDTRANS_CLIENT_KEY'),
         'isProduction'  => env('MIDTRANS_IS_PRODUCTION'),
