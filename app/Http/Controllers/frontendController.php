@@ -165,9 +165,9 @@ class FrontendController extends Controller
         $order      = new Order;
         $orderProd  = new OrderProduct;
         $total      = 0;
-        $cart       = Cart::with('product')->where('customer_id', Auth::user()->id)->get();
 
         // calculate total price
+        $cart       = Cart::with('product')->where('customer_id', Auth::user()->id)->get();
         foreach ($cart as $item){
             $total  += $item->product->price*$item->qty;
         }
@@ -175,7 +175,7 @@ class FrontendController extends Controller
 
         // insert to table order
         $order->code_order  = 'TRX-'.mt_rand(1000,9999).time();
-        $order->customer_id = Auth::user()->id;
+        $order->customer_id = auth()->user()->id;
         $order->total       = (int)$total_price;
         $order->status      = Str::lower('unpaid');
         $order->city        = Str::ucfirst($request->city);
@@ -199,22 +199,20 @@ class FrontendController extends Controller
 
     public function payment(Request $request, $id)
     {
-        $trx = Order::find($id);
+        $trx = Order::with('user')->find($id);
         $orders = OrderProduct::where('order_id',$trx->id)->get();
         $user = $trx->user;
-        // $data['order']      = Order::where('id',$id)->where('customer_id', Auth::user()->id)->first();
-        // $data['orderProd']  = OrderProduct::where('order_id',$data['order']->id)->get();
+
         // Set your Merchant Server Key
-        Config::$serverKey = SettingHelper::midtrans_api();
-        Config::$isProduction = false;
-        Config::$isSanitized = true;
-        Config::$is3ds = true;
-        // dd($trx,$orders,$user);
+        \Midtrans\Config::$serverKey = config('midtrans.server_key');
+        \Midtrans\Config::$isProduction = false;
+        \Midtrans\Config::$isSanitized = true;
+        \Midtrans\Config::$is3ds = true;
 
         $trx_details = array(
             'transaction_details' => array(
                 'order_id' => $trx->code_order,
-                'gross_amount' => round($trx->total_price),
+                'gross_amount' => round($trx->total),
             )
         );
 
@@ -225,26 +223,28 @@ class FrontendController extends Controller
                 'id' => $data->id,
                 'price' => $data->price,
                 'quantity' => 1,
-                'name' => $data->name,
+                'name' => $data->name
             );
             array_push($item_details, $item);
         }
+        // dd($item_details);
 
         $user_details = array(
             'first_name'    => $user->name,
             'last_name'     => '',
             'email'         => $user->email,
-            'phone'         => $user->phone,
+            'phone'         => $user->phone
         );
+        // dd($user_details);
 
         $params = [
             'transaction_details' => $trx_details,
             'item_details' => $item_details,
             'customer_details' => $user_details,
         ];
-        
+
         $snapToken = \Midtrans\Snap::getSnapToken($params);
-        dd($snapToken);
+        // dd($snapToken);
         return view('customer.payment', $data);
     }
 }

@@ -9,7 +9,7 @@
     <meta content="" name="description">
     <script type="text/javascript"
 		src="https://app.stg.midtrans.com/snap/snap.js"
-    data-client-key="{{ env('MIDTRANS_SERVER_KEY') }}"></script>
+    data-client-key="{{ config('midtrans.client_key') }}"></script>
     @include('layouts.customer.css')
     @yield('css')
 </head>
