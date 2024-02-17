@@ -120,7 +120,7 @@ class FrontendController extends Controller
         $data->product_id  = $request->product_id;
         $data->total_price = $product->price*$data->qty;
         $data->save();
-        return redirect()->back();
+        return redirect()->route('cart');
     }
 
     public function plus_cart(Request $request)
@@ -177,7 +177,7 @@ class FrontendController extends Controller
         $order->code_order  = 'TRX-'.mt_rand(1000,9999).time();
         $order->customer_id = auth()->user()->id;
         $order->total       = (int)$total_price;
-        $order->status      = Str::lower('unpaid');
+        $order->status      = Str::lower('paid');
         $order->city        = Str::ucfirst($request->city);
         $order->address     = Str::ucfirst($request->address);
         $order->zipcode     = (int)$request->zipcode;
@@ -202,6 +202,7 @@ class FrontendController extends Controller
         $trx = Order::with('user')->find($id);
         $orders = OrderProduct::where('order_id',$trx->id)->get();
         $user = $trx->user;
+        // dd($orders,$trx);
 
         // Set your Merchant Server Key
         \Midtrans\Config::$serverKey = config('midtrans.server_key');
@@ -210,11 +211,12 @@ class FrontendController extends Controller
         \Midtrans\Config::$is3ds = true;
 
         $trx_details = array(
-            'transaction_details' => array(
                 'order_id' => $trx->code_order,
                 'gross_amount' => round($trx->total),
-            )
         );
+        // dd($trx_details);
+
+        // $trx->update(['status' => 'paid']);
 
         $item_details = [];
         foreach($orders as $order) {
@@ -241,10 +243,18 @@ class FrontendController extends Controller
             'transaction_details' => $trx_details,
             'item_details' => $item_details,
             'customer_details' => $user_details,
+            'callbacks' => [
+                'finish' => route('index')
+            ]
         ];
 
-        $snapToken = \Midtrans\Snap::getSnapToken($params);
-        // dd($snapToken);
-        return view('customer.payment', $data);
+        try {
+            // Get Snap Payment Page URL
+            $paymentUrl = \Midtrans\Snap::createTransaction($params)->redirect_url;
+            return redirect($paymentUrl);
+        }
+        catch (Exception $e) {
+            return dd($e->getMessage());
+        }
     }
 }
